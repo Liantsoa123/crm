@@ -162,7 +162,7 @@
                         <span class="hide-menu">Gestion Système</span>
                     </a>
                     <ul th:if="${#authorization.expression('hasRole(''ROLE_MANAGER'')')}" class="collapse">
-                        <li><a th:href="${home + 'manager/system/reset-data'}" onclick="return confirm('Êtes-vous sûr de vouloir réinitialiser les données ?')">Réinitialiser les données</a></li>
+                        <li><a th:href="${home + 'manager/system/reset'}" >Réinitialiser les données</a></li>
                     </ul>
                 </li>
 
