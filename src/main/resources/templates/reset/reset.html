@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{/general/head.html}"></div>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+    <!-- Custom CSS -->
+    <link th:href="@{/css/style.min.css}" rel="stylesheet"/>
+    <!-- page css -->
+    <link th:href="@{/css/pages/inbox.css}" rel="stylesheet"/>
+</head>
+
+<body class="skin-blue fixed-layout">
+<div id="main-wrapper">
+    <!-- Topbar header -->
+    <div th:replace="~{/general/header.html}"></div>
+    <!-- Left Sidebar -->
+    <div th:replace="~{/general/left-sidebar.html}"></div>
+
+    <div class="page-wrapper">
+        <div class="container-fluid">
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h4 class="text-themecolor">Réinitialisation des données</h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Réinitialisation des données du système</h4>
+
+                            <div th:if="${successMessage}" class="alert alert-success">
+                                <span th:text="${successMessage}"></span>
+                            </div>
+                            <div th:if="${errorMessage}" class="alert alert-danger">
+                                <span th:text="${errorMessage}"></span>
+                            </div>
+
+                            <div class="alert alert-warning">
+                                <strong>Attention!</strong> Cette action est irréversible et
+                                supprimera toutes les données du système.
+                            </div>
+
+                            <div th:if="${param.success}" class="alert alert-success">
+                                Les données ont été réinitialisées avec succès.
+                            </div>
+
+                            <div th:if="${param.error}" class="alert alert-danger">
+                                Une erreur s'est produite lors de la réinitialisation.
+                            </div>
+
+                            <a href="/manager/system/reset/confirm"
+                               class="btn btn-danger"
+                               onclick="return confirm('Êtes-vous sûr de vouloir réinitialiser toutes les données?')">
+                                Réinitialiser les données
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div th:replace="~{/general/footer.html}"></div>
+    </div>
+</div>
+
+<!-- All Jquery -->
+<script th:inline="javascript">
+    const home = /*[[${home}]]*/ '';
+</script>
+<script th:src="@{/js/library/jquery-3.2.1.min.js}"></script>
+<script th:src="@{/js/library/popper.min.js}"></script>
+<script th:src="@{/js/library/bootstrap.min.js}"></script>
+<script th:src="@{/js/library/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/js/library/waves.js}"></script>
+<script th:src="@{/js/library/sidebarmenu.js}"></script>
+<script th:src="@{/js/library/custom.min.js}"></script>
+</body>
+</html>
