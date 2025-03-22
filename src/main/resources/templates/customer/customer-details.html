@@ -70,7 +70,7 @@
                 <div class="col-lg-4 col-xlg-3 col-md-5">
                     <div class="card">
                         <div class="card-body">
-                            <center class="m-t-30"> <img th:src="@{/images/pp.png}" class="img-circle" width="150" />
+                            <center class="m-t-30"><img th:src="@{/images/pp.png}" class="img-circle" width="150"/>
                                 <h4 class="card-title m-t-10" th:text="${customer.name}"></h4>
                                 <h6 class="card-subtitle" th:text="${customer.position}"></h6>
                             </center>
@@ -87,9 +87,15 @@
                             <h6 th:text="${customer.address}"></h6>
                             <small class="text-muted p-t-30 db">Social Profile</small>
                             <br/>
-                            <a th:href="${customer.facebook}" target="_blank"><button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button></a>
-                            <a th:href="${customer.twitter}" target="_blank"><button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button></a>
-                            <a th:href="${customer.youtube}" target="_blank"><button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button></a>
+                            <a th:href="${customer.facebook}" target="_blank">
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
+                            </a>
+                            <a th:href="${customer.twitter}" target="_blank">
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
+                            </a>
+                            <a th:href="${customer.youtube}" target="_blank">
+                                <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -99,7 +105,10 @@
                     <div class="card">
                         <!-- Nav tabs -->
                         <ul class="nav nav-tabs profile-tab" role="tablist">
-                            <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#profile" role="tab">Profile</a> </li>
+                            <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#profile"
+                                                    role="tab">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#budgets" role="tab">Budgets</a>
+                            </li>
                         </ul>
                         <!-- Tab panes -->
                         <div class="tab-content">
@@ -107,25 +116,56 @@
                             <div class="tab-pane active" id="profile" role="tabpanel">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-3 col-xs-6 b-r"> <strong>Full Name</strong>
+                                        <div class="col-md-3 col-xs-6 b-r"><strong>Full Name</strong>
                                             <br>
                                             <p class="text-muted" th:text="${customer.name}"></p>
                                         </div>
-                                        <div class="col-md-3 col-xs-6 b-r"> <strong>Mobile</strong>
+                                        <div class="col-md-3 col-xs-6 b-r"><strong>Mobile</strong>
                                             <br>
                                             <p class="text-muted" th:text="${customer.phone}"></p>
                                         </div>
-                                        <div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
+                                        <div class="col-md-3 col-xs-6 b-r"><strong>Email</strong>
                                             <br>
                                             <p class="text-muted" th:text="${customer.email}"></p>
                                         </div>
-                                        <div class="col-md-3 col-xs-6"> <strong>Location</strong>
+                                        <div class="col-md-3 col-xs-6"><strong>Location</strong>
                                             <br>
                                             <p class="text-muted" th:text="${customer.country}"></p>
                                         </div>
                                     </div>
                                     <hr>
                                     <p class="m-t-30" th:utext="${customer.description}"></p>
+                                </div>
+                            </div>
+                            <!-- Budgets tab -->
+                            <div class="tab-pane" id="budgets" role="tabpanel">
+                                <div class="card-body">
+                                    <h4 class="card-title">Budgets</h4>
+                                    <div class="table-responsive m-t-20">
+                                        <table id="budget-table" class="table table-hover no-wrap">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Nom</th>
+                                                <th>Montant</th>
+                                                <th>Début</th>
+                                                <th>Fin</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr th:if="${budgets.empty}">
+                                                <td colspan="6" class="text-center">Aucun budget disponible</td>
+                                            </tr>
+                                            <tr th:each="budget : ${budgets}">
+                                                <td th:text="${budget.id}"></td>
+                                                <td th:text="${budget.name}"></td>
+                                                <td th:text="${budget.amount + ' €'}"></td>
+                                                <td th:text="${#temporals.format(budget.startDate, 'dd/MM/yyyy')}"></td>
+                                                <td th:text="${#temporals.format(budget.endDate, 'dd/MM/yyyy')}"></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
