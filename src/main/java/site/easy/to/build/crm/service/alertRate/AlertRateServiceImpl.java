@@ -1,10 +1,12 @@
 package site.easy.to.build.crm.service.alertRate;
 
+import org.springframework.stereotype.Service;
 import site.easy.to.build.crm.entity.AlertRate;
 import site.easy.to.build.crm.repository.AlertRateRepository;
 
 import java.util.List;
 
+@Service
 public class AlertRateServiceImpl  implements AlertRateService {
     private final AlertRateRepository alertRateRepository;
 
