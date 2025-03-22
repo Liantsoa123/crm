@@ -37,10 +37,6 @@ public class Budget {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @PositiveOrZero(message = "Alert threshold must be positive or zero")
-    @Column(name = "alert_threshold")
-    private Double alertThreshold;
-
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
@@ -88,14 +84,6 @@ public class Budget {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
-    }
-
-    public Double getAlertThreshold() {
-        return alertThreshold;
-    }
-
-    public void setAlertThreshold(Double alertThreshold) {
-        this.alertThreshold = alertThreshold;
     }
 
     public Customer getCustomer() {
