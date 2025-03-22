@@ -16,6 +16,7 @@ import java.util.List;
 public class Budget {
 
     @Id
+    @Column(name = "budget_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
