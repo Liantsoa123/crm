@@ -112,7 +112,6 @@ public class ExpenseController {
             return "expense/create-expense";
         }
 
-        // Enregistrer la dépense
         expenseService.save(expense);
 
         // Associer la dépense au lead ou au ticket et mettre à jour l'entité
@@ -121,18 +120,17 @@ public class ExpenseController {
             if (lead != null) {
                 lead.setExpense(expense);
                 leadService.save(lead);
-                return "redirect:/employee/lead/my-leads";
+                return "redirect:/employee/lead/manager/all-leads";
             }
         } else if (ticketId != null) {
             Ticket ticket = ticketServiceImpl.findByTicketId(ticketId);
             if (ticket != null) {
                 ticket.setExpense(expense);
                 ticketServiceImpl.save(ticket);
-                return "redirect:/employee/ticket/my-tickets";
+                return "redirect:/employee/ticket/manager/all-tickets";
             }
         }
 
-        // Si on arrive ici, c'est qu'il y a eu un problème
         return "redirect:/employee/dashboard";
     }
 
