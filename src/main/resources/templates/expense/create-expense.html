@@ -54,7 +54,7 @@
                                         th:text="${ticket.customer.name}"></span></h4>
                             </div>
 
-                            <form th:object="${expense}" th:action="@{/employee/lead/save-expense}" method="post">
+                            <form th:object="${expense}" th:action="@{/employee/expense/save-expense}" method="post">
                                 <input type="hidden" th:if="${leadId}" name="leadId" th:value="${leadId}"/>
                                 <input type="hidden" th:if="${ticketId}" name="ticketId" th:value="${ticketId}"/>
 
