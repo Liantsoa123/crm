@@ -6,11 +6,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import site.easy.to.build.crm.dto.BudgetStatusDTO;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.service.budget.BudgetServiceImpl;
+import site.easy.to.build.crm.service.budget.BudgetStatusService;
 import site.easy.to.build.crm.service.expense.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.lead.LeadServiceImpl;
@@ -29,15 +31,17 @@ public class ExpenseController {
     private final LeadServiceImpl leadServiceImpl;
     private final BudgetServiceImpl budgetServiceImpl;
     private final TicketServiceImpl ticketServiceImpl;
+    private final BudgetStatusService budgetStatusService;
 
     @Autowired
-    public ExpenseController(ExpenseService expenseService, LeadService leadService, AuthenticationUtils authenticationUtils, LeadServiceImpl leadServiceImpl, BudgetServiceImpl budgetServiceImpl, TicketServiceImpl ticketServiceImpl) {
+    public ExpenseController(ExpenseService expenseService, LeadService leadService, AuthenticationUtils authenticationUtils, LeadServiceImpl leadServiceImpl, BudgetServiceImpl budgetServiceImpl, TicketServiceImpl ticketServiceImpl, BudgetStatusService budgetStatusService) {
         this.expenseService = expenseService;
         this.leadService = leadService;
         this.authenticationUtils = authenticationUtils;
         this.leadServiceImpl = leadServiceImpl;
         this.budgetServiceImpl = budgetServiceImpl;
         this.ticketServiceImpl = ticketServiceImpl;
+        this.budgetStatusService = budgetStatusService;
     }
 
     @PostMapping("/lead/{leadId}")
@@ -50,11 +54,11 @@ public class ExpenseController {
         Expense expense = new Expense();
         lead.setExpense(expense);
 
-        List<Budget> budgets = budgetServiceImpl.findBudgetsByCustomer_CustomerId(lead.getCustomer().getCustomerId());
+        List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(lead.getCustomer().getCustomerId());
 
         model.addAttribute("lead", lead);
         model.addAttribute("expense", expense);
-        model.addAttribute("budgets", budgets);
+        model.addAttribute("budgetStatus", budgetStatusDTOS);
         model.addAttribute("ticketId", null);
 
 
@@ -71,11 +75,12 @@ public class ExpenseController {
         Expense expense = new Expense();
         ticket.setExpense(expense);
 
-        List<Budget> budgets = budgetServiceImpl.findBudgetsByCustomer_CustomerId(ticket.getCustomer().getCustomerId());
+        List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(ticket.getCustomer().getCustomerId());
+
 
         model.addAttribute("ticket", ticket);
         model.addAttribute("expense", expense);
-        model.addAttribute("budgets", budgets);
+        model.addAttribute("budgetStatus", budgetStatusDTOS);
         model.addAttribute("leadId", null);
 
         return "expense/create-expense";
