@@ -16,6 +16,6 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
     public List<Expense> findByBudgetIdOrderByDateDesc(Long budgetId);
 
-
+    public  Expense save(Expense expense);
 
 }

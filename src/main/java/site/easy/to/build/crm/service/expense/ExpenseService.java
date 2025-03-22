@@ -13,5 +13,5 @@ public interface ExpenseService {
 
     public List<Expense> findByBudgetIdOrderByDateDesc(Long budgetId);
 
-    public  void save(Expense expense);
+    public  Expense save(Expense expense);
 }
