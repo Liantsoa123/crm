@@ -34,4 +34,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         return expenseRepository.findByBudgetIdOrderByDateDesc(budgetId);
     }
 
+    @Override
+    public  void save(Expense expense) {
+        expenseRepository.save(expense);
+    }
+
 }
