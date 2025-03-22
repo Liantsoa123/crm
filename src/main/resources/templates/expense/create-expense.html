@@ -58,6 +58,10 @@
                                 <input type="hidden" th:if="${leadId}" name="leadId" th:value="${leadId}"/>
                                 <input type="hidden" th:if="${ticketId}" name="ticketId" th:value="${ticketId}"/>
 
+                                <div th:if="${alertMessage}" class="alert" th:classappend="${alertMessage.contains('ALERTE') ? 'alert-danger' : 'alert-warning'}" role="alert">
+                                    <span th:text="${alertMessage}"></span>
+                                </div>
+
                                 <div class="form-group">
                                     <label class="m-t-20">Date:</label>
                                     <div class="input-group">
@@ -164,7 +168,7 @@
 
     // Ajout d'un écouteur pour le select des budgets
     jQuery(document).ready(function () {
-        // Créer un élément div pour afficher le message d'alerte et l'insérer avant le label et le select
+        /*// Créer un élément div pour afficher le message d'alerte et l'insérer avant le label et le select
         var alertDiv = $('<div class="alert mt-2 mb-2" role="alert" style="display: none;"></div>');
         $('label:contains("Budgets")').before(alertDiv);
 
@@ -196,7 +200,7 @@
 
         // Déclencher l'événement change pour afficher l'alerte si un budget est déjà sélectionné
         $('select[name="budget"]').trigger('change');
-
+        */
         // Modifier la soumission du formulaire pour vérifier le montant restant
         $('form').on('submit', function (e) {
             var selectedOption = $('select[name="budget"]').find('option:selected');
