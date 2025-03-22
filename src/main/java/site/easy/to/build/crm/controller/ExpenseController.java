@@ -86,19 +86,54 @@ public class ExpenseController {
         return "expense/create-expense";
     }
 
-  /*  @PostMapping("/save-expense")
+    @PostMapping("/save-expense")
     public String saveExpense(@ModelAttribute("expense") @Valid Expense expense,
-                              BindingResult bindingResult, Model model) {
+                              BindingResult bindingResult,
+                              @RequestParam(value = "leadId", required = false) Integer leadId,
+                              @RequestParam(value = "ticketId", required = false) Integer ticketId,
+                              Model model) {
+
+        // Validation des entrées
         if (bindingResult.hasErrors()) {
-            Lead lead = expense.getLead();
-            model.addAttribute("lead", lead);
-            model.addAttribute("home", authenticationUtils.getHomePagePath());
+            // Recharger les données nécessaires pour le formulaire
+            if (leadId != null) {
+                Lead lead = leadServiceImpl.findByLeadId(leadId);
+                List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(lead.getCustomer().getCustomerId());
+                model.addAttribute("lead", lead);
+                model.addAttribute("budgetStatus", budgetStatusDTOS);
+                model.addAttribute("ticketId", null);
+            } else if (ticketId != null) {
+                Ticket ticket = ticketServiceImpl.findByTicketId(ticketId);
+                List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(ticket.getCustomer().getCustomerId());
+                model.addAttribute("ticket", ticket);
+                model.addAttribute("budgetStatus", budgetStatusDTOS);
+                model.addAttribute("leadId", null);
+            }
             return "expense/create-expense";
         }
 
-        // Sauvegarder la dépense
+        // Enregistrer la dépense
         expenseService.save(expense);
 
-        return "redirect:/employee/lead/my-leads";
-    }*/
+        // Associer la dépense au lead ou au ticket et mettre à jour l'entité
+        if (leadId != null) {
+            Lead lead = leadServiceImpl.findByLeadId(leadId);
+            if (lead != null) {
+                lead.setExpense(expense);
+                leadService.save(lead);
+                return "redirect:/employee/lead/my-leads";
+            }
+        } else if (ticketId != null) {
+            Ticket ticket = ticketServiceImpl.findByTicketId(ticketId);
+            if (ticket != null) {
+                ticket.setExpense(expense);
+                ticketServiceImpl.save(ticket);
+                return "redirect:/employee/ticket/my-tickets";
+            }
+        }
+
+        // Si on arrive ici, c'est qu'il y a eu un problème
+        return "redirect:/employee/dashboard";
+    }
+
 }
