@@ -107,6 +107,15 @@
                                                 </button>
                                             </form>
                                         </td>
+
+                                        <td>
+                                            <form th:action="${home + 'employee/expense/lead/' + lead.leadId}" method="post">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="mdi mdi-currency-eur"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+
                                     </tr>
                                     </tbody>
                                 </table>
