@@ -95,7 +95,7 @@
                                     <label class="m-t-20">Budgets</label>
                                     <div class="input-group">
                                         <select class="form-control" th:field="*{budget}" required>
-                                            <option value="">Sélectionner un type de dépense</option>
+                                            <option value="">Sélectionner un Budget</option>
                                             <option th:each="budget : ${budgets}"
                                                     th:value="${budget.id}"
                                                     th:text="${budget.name}"></option>
