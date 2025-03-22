@@ -34,4 +34,9 @@ public class BudgetServiceImpl implements BudgetService {
     public List<Budget> findBudgetsByCustomer_CustomerIdAndStartDateAndEndDate(Integer customerCustomerId, LocalDate startDate, LocalDate endDate) {
         return budgetRepository.findBudgetsByCustomer_CustomerIdAndStartDateAndEndDate(customerCustomerId, startDate, endDate);
     }
+
+    @Override
+    public void saveBudget(Budget budget) {
+        budgetRepository.save(budget);
+    }
 }

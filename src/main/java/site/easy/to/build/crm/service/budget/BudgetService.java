@@ -15,4 +15,5 @@ public interface BudgetService {
 
     public List<Budget> findBudgetsByCustomer_CustomerIdAndStartDateAndEndDate(Integer customerCustomerId, LocalDate startDate,  LocalDate endDate);
 
+    public void saveBudget(Budget budget);
 }
