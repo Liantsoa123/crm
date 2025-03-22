@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BudgetService {
-    public Budget findByBudgetId(int budgetId);
+    public Budget findById(int budgetId);
 
     public List<Budget> findAll();
 

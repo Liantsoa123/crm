@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Integer> {
-    public Budget findByBudgetId(int budgetId);
+    public Budget findById(int budgetId);
 
     public List<Budget> findAll();
 

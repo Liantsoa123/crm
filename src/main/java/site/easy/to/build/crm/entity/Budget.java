@@ -18,7 +18,7 @@ public class Budget {
     @Id
     @Column(name = "budget_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long budgetId;
 
     @NotBlank(message = "Name is required")
     @Column(name = "name", nullable = false)
@@ -47,11 +47,11 @@ public class Budget {
 
     // Getters and Setters
     public Long getId() {
-        return id;
+        return budgetId;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this.budgetId = id;
     }
 
     public String getName() {
