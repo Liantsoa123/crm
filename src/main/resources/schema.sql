@@ -229,6 +229,45 @@ CREATE TABLE IF NOT EXISTS `customer` (
   ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
   /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+-- Table structure for table `budget`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE IF NOT EXISTS `budget` (
+  `budget_id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `amount` decimal(10,2) NOT NULL,
+  `start_date` date NOT NULL,
+  `end_date` date NOT NULL,
+  `customer_id` int unsigned NOT NULL,
+  PRIMARY KEY (`budget_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+--
+-- Table structure for table `expenses`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE IF NOT EXISTS `expenses` (
+  `expense_id` bigint NOT NULL AUTO_INCREMENT,
+  `amount` decimal(10,2) NOT NULL,
+  `date` date NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `budget_id` bigint NOT NULL,
+  PRIMARY KEY (`expense_id`),
+  KEY `budget_id` (`budget_id`),
+  CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `trigger_lead`
 --
@@ -248,14 +287,17 @@ CREATE TABLE IF NOT EXISTS `trigger_lead` (
   `google_drive` tinyint(1) DEFAULT NULL,
   `google_drive_folder_id` varchar(255) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
+  `expense_id` bigint DEFAULT NULL,
   PRIMARY KEY (`lead_id`),
   UNIQUE KEY `meeting_info` (`meeting_id`),
   KEY `customer_id` (`customer_id`),
   KEY `user_id` (`user_id`),
   KEY `employee_id` (`employee_id`),
+  KEY `expense_id` (`expense_id`),
   CONSTRAINT `trigger_lead_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
   CONSTRAINT `trigger_lead_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `trigger_lead_ibfk_3` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `trigger_lead_ibfk_3` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `trigger_lead_ibfk_4` FOREIGN KEY (`expense_id`) REFERENCES `expenses` (`expense_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -276,13 +318,16 @@ CREATE TABLE IF NOT EXISTS `trigger_ticket` (
   `manager_id` int DEFAULT NULL,
   `employee_id` int DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
+  `expense_id` bigint DEFAULT NULL,
   PRIMARY KEY (`ticket_id`),
   KEY `fk_ticket_customer` (`customer_id`),
   KEY `fk_ticket_manager` (`manager_id`),
   KEY `fk_ticket_employee` (`employee_id`),
+  KEY `expense_id` (`expense_id`),
   CONSTRAINT `fk_ticket_customer` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`),
   CONSTRAINT `fk_ticket_employee` FOREIGN KEY (`employee_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `fk_ticket_manager` FOREIGN KEY (`manager_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `fk_ticket_manager` FOREIGN KEY (`manager_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `fk_ticket_expense` FOREIGN KEY (`expense_id`) REFERENCES `expenses` (`expense_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -496,12 +541,13 @@ CREATE TABLE IF NOT EXISTS `google_drive_file` (
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+--
+-- Table structure for talbe `alert_rate`
+--
+
+CREATE TABLE IF NOT EXISTS `alert_rate` (
+    `alert_rate_id` int unsigned NOT NULL AUTO_INCREMENT,
+    `rate` decimal(10,2) DEFAULT NULL,
+    PRIMARY KEY (`alert_rate_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

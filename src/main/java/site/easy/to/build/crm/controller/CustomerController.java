@@ -11,12 +11,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.entity.CustomerLoginInfo;
-import site.easy.to.build.crm.entity.OAuthUser;
-import site.easy.to.build.crm.entity.User;
+import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.google.service.acess.GoogleAccessService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
+import site.easy.to.build.crm.service.budget.BudgetServiceImpl;
 import site.easy.to.build.crm.service.contract.ContractService;
 import site.easy.to.build.crm.service.customer.CustomerLoginInfoService;
 import site.easy.to.build.crm.service.customer.CustomerService;
@@ -43,11 +41,12 @@ public class CustomerController {
     private final TicketService ticketService;
     private final ContractService contractService;
     private final LeadService leadService;
+    private final BudgetServiceImpl budgetServiceImpl;
 
     @Autowired
     public CustomerController(CustomerService customerService, UserService userService, CustomerLoginInfoService customerLoginInfoService,
                               AuthenticationUtils authenticationUtils, GoogleGmailApiService googleGmailApiService, Environment environment,
-                              TicketService ticketService, ContractService contractService, LeadService leadService) {
+                              TicketService ticketService, ContractService contractService, LeadService leadService, BudgetServiceImpl budgetServiceImpl) {
         this.customerService = customerService;
         this.userService = userService;
         this.customerLoginInfoService = customerLoginInfoService;
@@ -57,6 +56,7 @@ public class CustomerController {
         this.ticketService = ticketService;
         this.contractService = contractService;
         this.leadService = leadService;
+        this.budgetServiceImpl = budgetServiceImpl;
     }
 
     @GetMapping("/manager/all-customers")
@@ -101,7 +101,10 @@ public class CustomerController {
             return "redirect:/access-denied";
         }
 
+        List<Budget> budgets = budgetServiceImpl.findBudgetsByCustomer_CustomerId(id);
         model.addAttribute("customer",customer);
+        model.addAttribute("budgets",budgets);
+
         return "customer/customer-details";
     }
 
