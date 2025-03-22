@@ -56,9 +56,12 @@ public class ExpenseController {
 
         List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(lead.getCustomer().getCustomerId());
 
+        String alertMesaage = budgetStatusService.alertMessage(lead.getCustomer().getCustomerId());
+
         model.addAttribute("lead", lead);
         model.addAttribute("expense", expense);
         model.addAttribute("budgetStatus", budgetStatusDTOS);
+        model.addAttribute("alertMessage", alertMesaage);
         model.addAttribute("ticketId", null);
 
 
@@ -77,10 +80,13 @@ public class ExpenseController {
 
         List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(ticket.getCustomer().getCustomerId());
 
+        String alertMesaage = budgetStatusService.alertMessage(ticket.getCustomer().getCustomerId());
+
 
         model.addAttribute("ticket", ticket);
         model.addAttribute("expense", expense);
         model.addAttribute("budgetStatus", budgetStatusDTOS);
+        model.addAttribute("alertMessage", alertMesaage);
         model.addAttribute("leadId", null);
 
         return "expense/create-expense";
