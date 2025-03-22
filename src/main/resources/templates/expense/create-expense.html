@@ -43,11 +43,15 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-body">
-                            <div th:if="${lead}" >
-                                <h4 class="card-title"  >Créer une dépense pour le lead <span th:text="${lead.name}"></span> de customer <span th:text="${lead.customer.name}"></span></h4>
+                            <div th:if="${lead}">
+                                <h4 class="card-title">Créer une dépense pour le lead <span
+                                        th:text="${lead.name}"></span> de customer <span
+                                        th:text="${lead.customer.name}"></span></h4>
                             </div>
-                            <div th:if="${ticket}"  >
-                                <h4 class="card-title" >Créer une dépense pour le ticket <span th:text="${ticket.subject}"></span> de customer <span th:text="${ticket.customer.name}"></span></h4>
+                            <div th:if="${ticket}">
+                                <h4 class="card-title">Créer une dépense pour le ticket <span
+                                        th:text="${ticket.subject}"></span> de customer <span
+                                        th:text="${ticket.customer.name}"></span></h4>
                             </div>
 
                             <form th:object="${expense}" th:action="@{/employee/lead/save-expense}" method="post">
@@ -96,9 +100,12 @@
                                     <div class="input-group">
                                         <select class="form-control" th:field="*{budget}" required>
                                             <option value="">Sélectionner un Budget</option>
-                                            <option th:each="budget : ${budgets}"
-                                                    th:value="${budget.id}"
-                                                    th:text="${budget.name}"></option>
+                                            <option th:each="budgetStatu : ${budgetStatus}"
+                                                    th:value="${budgetStatu.budget.id}"
+                                                    th:text="${budgetStatu.budget.name}"
+                                                    th:data-alert-message="${budgetStatu.alertMessage}"
+                                                    th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}">
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="input-group">
@@ -153,6 +160,43 @@
         autoclose: true,
         todayHighlight: true
     });
+
+    // Ajout d'un écouteur pour le select des budgets
+    jQuery(document).ready(function() {
+        // Créer un élément div pour afficher le message d'alerte et l'insérer avant le label et le select
+        var alertDiv = $('<div class="alert mt-2 mb-2" role="alert" style="display: none;"></div>');
+        $('label:contains("Budgets")').before(alertDiv);
+
+        // Ajouter un écouteur d'événements au select des budgets
+        $('select[name="budget"]').change(function() {
+            var selectedOption = $(this).find('option:selected');
+            var budgetId = selectedOption.val();
+
+            // Masquer l'alerte si aucun budget n'est sélectionné
+            if (!budgetId) {
+                alertDiv.hide();
+                return;
+            }
+
+            // Récupérer l'alerte directement à partir des attributs data
+            var alertMessage = selectedOption.data('alert-message');
+            var isAlert = selectedOption.data('is-alert');
+
+            // Afficher le message dans la div d'alerte avec la classe appropriée
+            if (alertMessage) {
+                alertDiv.text(alertMessage);
+                alertDiv.removeClass('alert-warning alert-danger');
+                alertDiv.addClass(isAlert ? 'alert-danger' : 'alert-warning');
+                alertDiv.show();
+            } else {
+                alertDiv.hide();
+            }
+        });
+
+        // Déclencher l'événement change pour afficher l'alerte si un budget est déjà sélectionné
+        $('select[name="budget"]').trigger('change');
+    });
 </script>
+// ...existing code...
 </body>
 </html>
