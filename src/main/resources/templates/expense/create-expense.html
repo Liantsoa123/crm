@@ -59,7 +59,7 @@
                                 <input type="hidden" th:if="${ticketId}" name="ticketId" th:value="${ticketId}"/>
 
                                 <div class="form-group">
-                                    <label class="m-t-20">Description:</label>
+                                    <label class="m-t-20">Date:</label>
                                     <div class="input-group">
                                         <input type="date" th:field="*{date}" class="form-control" required>
                                     </div>
@@ -104,7 +104,8 @@
                                                     th:value="${budgetStatu.budget.id}"
                                                     th:text="${budgetStatu.budget.name}"
                                                     th:data-alert-message="${budgetStatu.alertMessage}"
-                                                    th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}">
+                                                    th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}"
+                                                    th:data-remaining-amount="${budgetStatu.remainingAmount}">
                                             </option>
                                         </select>
                                     </div>
@@ -162,13 +163,13 @@
     });
 
     // Ajout d'un écouteur pour le select des budgets
-    jQuery(document).ready(function() {
+    jQuery(document).ready(function () {
         // Créer un élément div pour afficher le message d'alerte et l'insérer avant le label et le select
         var alertDiv = $('<div class="alert mt-2 mb-2" role="alert" style="display: none;"></div>');
         $('label:contains("Budgets")').before(alertDiv);
 
         // Ajouter un écouteur d'événements au select des budgets
-        $('select[name="budget"]').change(function() {
+        $('select[name="budget"]').change(function () {
             var selectedOption = $(this).find('option:selected');
             var budgetId = selectedOption.val();
 
@@ -195,8 +196,27 @@
 
         // Déclencher l'événement change pour afficher l'alerte si un budget est déjà sélectionné
         $('select[name="budget"]').trigger('change');
+
+        // Modifier la soumission du formulaire pour vérifier le montant restant
+        $('form').on('submit', function (e) {
+            var selectedOption = $('select[name="budget"]').find('option:selected');
+            var remainingAmount = parseFloat(selectedOption.data('remaining-amount'));
+            var expenseAmount = parseFloat($('input[name="amount"]').val());
+
+            // Vérifier si le montant de la dépense est supérieur au montant restant du budget
+            if (!isNaN(remainingAmount) && !isNaN(expenseAmount) && expenseAmount > remainingAmount) {
+                // Empêcher la soumission du formulaire pour afficher la confirmation
+                e.preventDefault();
+
+                // Afficher la popup de confirmation
+                if (confirm("Attention : Le montant de la dépense (" + expenseAmount + " €) est supérieur au montant restant du budget (" + remainingAmount + " €). Voulez-vous continuer ?")) {
+                    // Si l'utilisateur confirme, soumettre le formulaire
+                    $(this).unbind('submit').submit();
+                }
+            }
+        });
+
     });
 </script>
-// ...existing code...
 </body>
 </html>
