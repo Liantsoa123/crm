@@ -14,7 +14,7 @@ public class AlertRateServiceImpl  implements AlertRateService {
 
     @Override
     public AlertRate findByAlertRateId(int alertRateId) {
-        return alertRateRepository.findAlertRateBy(alertRateId);
+        return alertRateRepository.findByAlertRateId(alertRateId);
     }
 
     @Override

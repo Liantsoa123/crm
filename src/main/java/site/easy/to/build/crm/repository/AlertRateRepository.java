@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface AlertRateRepository extends JpaRepository<AlertRate, Integer> {
-    public AlertRate findAlertRateBy (int alertRateId);
+    public AlertRate findByAlertRateId(int alertRateId);
     public List<AlertRate> findAll();
     public void deleteByAlertRateId(int alertRateId);
 
