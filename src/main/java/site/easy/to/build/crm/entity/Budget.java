@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "budgets")
+@Table(name = "budget")
 public class Budget {
 
     @Id

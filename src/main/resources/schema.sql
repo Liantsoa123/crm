@@ -231,12 +231,12 @@ CREATE TABLE IF NOT EXISTS `customer` (
 
 
 --
--- Table structure for table `budgets`
+-- Table structure for table `budget`
 --
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE IF NOT EXISTS `budgets` (
+CREATE TABLE IF NOT EXISTS `budget` (
   `budget_id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
@@ -245,7 +245,7 @@ CREATE TABLE IF NOT EXISTS `budgets` (
   `customer_id` int unsigned NOT NULL,
   PRIMARY KEY (`budget_id`),
   KEY `customer_id` (`customer_id`),
-  CONSTRAINT `budgets_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
+  CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -264,7 +264,7 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   `budget_id` bigint NOT NULL,
   PRIMARY KEY (`expense_id`),
   KEY `budget_id` (`budget_id`),
-  CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budgets` (`budget_id`)
+  CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
