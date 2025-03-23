@@ -3,8 +3,10 @@ package site.easy.to.build.crm.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.Lead;
+import site.easy.to.build.crm.service.expense.ExpenseServiceImpl;
 import site.easy.to.build.crm.service.lead.LeadService;
 
 import java.util.List;
@@ -14,10 +16,12 @@ import java.util.List;
 public class LeadApiController {
 
     private final LeadService leadService;
+    private final ExpenseServiceImpl expenseServiceImpl;
 
     @Autowired
-    public LeadApiController(LeadService leadService) {
+    public LeadApiController(LeadService leadService, ExpenseServiceImpl expenseServiceImpl) {
         this.leadService = leadService;
+        this.expenseServiceImpl = expenseServiceImpl;
     }
 
     // Obtenir un lead par son ID
@@ -58,13 +62,16 @@ public class LeadApiController {
     }
 
     // Supprimer un lead
+
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteLead(@PathVariable("id") int id) {
         Lead lead = leadService.findByLeadId(id);
         if (lead == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        expenseServiceImpl.delete(lead.getExpense());
         leadService.delete(lead);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
