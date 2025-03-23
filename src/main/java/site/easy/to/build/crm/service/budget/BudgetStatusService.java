@@ -39,7 +39,7 @@ public class BudgetStatusService {
 
 
         List<Expense> expenses = budgets.stream()
-                .map(budget -> expenseService.findByBudgetId(budget.getId()))
+                .map(budget -> expenseService.findByBudgetId(budget.getBudgetId()))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 

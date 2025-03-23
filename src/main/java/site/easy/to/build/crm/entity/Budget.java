@@ -46,11 +46,11 @@ public class Budget {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public Long getBudgetId() {
         return budgetId;
     }
 
-    public void setId(Long id) {
+    public void setBudgetId(Long id) {
         this.budgetId = id;
     }
 

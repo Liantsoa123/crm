@@ -18,7 +18,7 @@ public class BudgetStatusDTO {
 
         // Calculer le montant restant
         BigDecimal totalExpenses = expenses.stream()
-                .filter(expense -> expense.getBudget().getId().equals(budget.getId()))
+                .filter(expense -> expense.getBudget().getBudgetId().equals(budget.getBudgetId()))
                 .map(Expense::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
