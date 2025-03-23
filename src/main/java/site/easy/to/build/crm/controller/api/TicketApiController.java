@@ -49,7 +49,7 @@ public class TicketApiController {
     }
 
     // Obtenir tous les tickets
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<Ticket>> getAllTickets() {
         List<Ticket> tickets = ticketService.findAll();
         return new ResponseEntity<>(tickets, HttpStatus.OK);
