@@ -157,7 +157,7 @@
                                                 <td colspan="6" class="text-center">Aucun budget disponible</td>
                                             </tr>
                                             <tr th:each="budget : ${budgets}">
-                                                <td th:text="${budget.id}"></td>
+                                                <td th:text="${budget.budgetId}"></td>
                                                 <td th:text="${budget.name}"></td>
                                                 <td th:text="${budget.amount + ' €'}"></td>
                                                 <td th:text="${#temporals.format(budget.startDate, 'dd/MM/yyyy')}"></td>
