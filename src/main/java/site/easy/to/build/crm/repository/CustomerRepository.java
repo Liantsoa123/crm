@@ -25,15 +25,17 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     long countByUserId(int userId);
 
     @Query(value = """
-    SELECT new site.easy.to.build.crm.dto.CustomerStatisticsDTO(
-        c.name as customerName,
-        COUNT(DISTINCT t.ticketId) as ticketCount,
-        COUNT(DISTINCT l.leadId) as leadCount,
-        c.customerId as customerId)
-    FROM Customer c
-    LEFT JOIN Ticket t ON c.customerId = t.customer.customerId
-    LEFT JOIN Lead l ON c.customerId = l.customer.customerId
-    GROUP BY c.customerId, c.name
-    """)
+            SELECT new site.easy.to.build.crm.dto.CustomerStatisticsDTO(
+                c.name as customerName,
+                COUNT(DISTINCT t.ticketId) as ticketCount,
+                COUNT(DISTINCT l.leadId) as leadCount,
+                c.customerId as customerId,
+                SUM(b.amount) as totalBudget)
+            FROM Customer c
+            LEFT JOIN Ticket t ON c.customerId = t.customer.customerId
+            LEFT JOIN Lead l ON c.customerId = l.customer.customerId
+            join Budget b on c.customerId = b.customer.customerId
+            GROUP BY c.customerId, c.name
+            """)
     List<CustomerStatisticsDTO> getCustomerStatistics();
 }
