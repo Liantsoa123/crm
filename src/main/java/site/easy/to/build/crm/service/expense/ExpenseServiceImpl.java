@@ -39,4 +39,9 @@ public class ExpenseServiceImpl implements ExpenseService {
         return  expenseRepository.save(expense);
     }
 
+    @Override
+    public  void delete(Expense expense) {
+        expenseRepository.delete(expense);
+    }
+
 }
