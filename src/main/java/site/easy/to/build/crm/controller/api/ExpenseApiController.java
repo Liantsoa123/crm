@@ -53,7 +53,7 @@ public class ExpenseApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        expense.setId(id);
+        expense.setExpenseId(id);
         Expense updatedExpense = expenseService.save(expense);
         return new ResponseEntity<>(updatedExpense, HttpStatus.OK);
     }
