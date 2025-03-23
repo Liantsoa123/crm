@@ -57,7 +57,14 @@ public class BudgetStatusService {
                 .map(BudgetStatusDTO::getRemainingAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        if (totalRemainingAmount.compareTo(BigDecimal.ZERO) < 0) {
+        BigDecimal totalBudgetAmount = budgetStatusDTOS.stream()
+                .map(BudgetStatusDTO::getBudget)
+                .map(Budget::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+
+        if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {
             return "ALERTE: Le total des budgets a atteint un niveau critique. Reste: " + totalRemainingAmount + " €";
         } else {
             return "Total des budgets : Reste " + totalRemainingAmount + " €";
