@@ -3,8 +3,10 @@ package site.easy.to.build.crm.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import site.easy.to.build.crm.entity.Ticket;
+import site.easy.to.build.crm.service.expense.ExpenseServiceImpl;
 import site.easy.to.build.crm.service.ticket.TicketService;
 
 import java.util.List;
@@ -14,10 +16,12 @@ import java.util.List;
 public class TicketApiController {
 
     private final TicketService ticketService;
+    private final ExpenseServiceImpl expenseServiceImpl;
 
     @Autowired
-    public TicketApiController(TicketService ticketService) {
+    public TicketApiController(TicketService ticketService, ExpenseServiceImpl expenseServiceImpl) {
         this.ticketService = ticketService;
+        this.expenseServiceImpl = expenseServiceImpl;
     }
 
     // Obtenir un ticket par son ID
@@ -53,11 +57,13 @@ public class TicketApiController {
 
     // Supprimer un ticket
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteTicket(@PathVariable("id") int id) {
         Ticket ticket = ticketService.findByTicketId(id);
         if (ticket == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        expenseServiceImpl.delete(ticket.getExpense());
         ticketService.delete(ticket);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
