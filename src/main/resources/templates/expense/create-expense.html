@@ -105,7 +105,7 @@
                                         <select class="form-control" th:field="*{budget}" required>
                                             <option value="">Sélectionner un Budget</option>
                                             <option th:each="budgetStatu : ${budgetStatus}"
-                                                    th:value="${budgetStatu.budget.id}"
+                                                    th:value="${budgetStatu.budget.budgetId}"
                                                     th:text="${budgetStatu.budget.name}"
                                                     th:data-alert-message="${budgetStatu.alertMessage}"
                                                     th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}"
