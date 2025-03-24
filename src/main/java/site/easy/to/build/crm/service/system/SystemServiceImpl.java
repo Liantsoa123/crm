@@ -30,6 +30,9 @@ public class SystemServiceImpl implements SystemService {
         entityManager.createNativeQuery("TRUNCATE TABLE ticket_settings").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE TABLE file").executeUpdate();
         entityManager.createNativeQuery("TRUNCATE TABLE google_drive_file").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE alert_rate").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE budget").executeUpdate();
+        entityManager.createNativeQuery("TRUNCATE TABLE expense").executeUpdate();
 
         entityManager.createNativeQuery("SET FOREIGN_KEY_CHECKS = 1").executeUpdate();
     }

@@ -7,8 +7,8 @@ import java.math.BigDecimal;
 @Data
 public class CustomerStatisticsDTO {
     private String customerName;
-    private Long ticketCount;
-    private Long leadCount;
+    private double ticketCount;
+    private double leadCount;
     private Integer customerId;
-    private BigDecimal totalBudget;
+    private double totalBudget;
 }

@@ -261,7 +261,7 @@ CREATE TABLE IF NOT EXISTS `expenses` (
   `amount` decimal(10,2) NOT NULL,
   `date` date NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `budget_id` bigint NOT NULL,
+  `budget_id` bigint DEFAULT NULL,
   PRIMARY KEY (`expense_id`),
   KEY `budget_id` (`budget_id`),
   CONSTRAINT `expenses_ibfk_1` FOREIGN KEY (`budget_id`) REFERENCES `budget` (`budget_id`)

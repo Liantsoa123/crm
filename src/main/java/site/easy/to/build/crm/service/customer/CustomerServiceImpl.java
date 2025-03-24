@@ -7,6 +7,8 @@ import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,6 +63,36 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerStatisticsDTO> getCustomerStatistics() {
-        return customerRepository.getCustomerStatistics();
+        List<CustomerStatisticsDTO> customerStatisticsDTOS = new ArrayList<>();
+        List<Customer> customers = findAll();
+        for (Customer customer : customers) {
+            CustomerStatisticsDTO customerStatisticsDTO = new CustomerStatisticsDTO();
+            customerStatisticsDTO.setCustomerName(customer.getName());
+            customerStatisticsDTO.setCustomerId(customer.getCustomerId());
+            customerStatisticsDTO.setLeadCount(getTotalExpensesLeadByCustomerId(customer.getCustomerId()));
+            customerStatisticsDTO.setTicketCount(getTotalExpensesTicketByCustomerId(customer.getCustomerId()));
+            if (getTotalBudgetByCustomerId(customer.getCustomerId()) ==null){
+                customerStatisticsDTO.setTotalBudget(0);
+            }else {
+                customerStatisticsDTO.setTotalBudget(getTotalBudgetByCustomerId(customer.getCustomerId()));
+            }
+            customerStatisticsDTOS.add(customerStatisticsDTO);
+        }
+        return customerStatisticsDTOS;
+    }
+
+    @Override
+    public double getTotalExpensesTicketByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesTicketByCustomerId(customerId);
+    }
+
+    @Override
+    public double getTotalExpensesLeadByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesLeadByCustomerId(customerId);
+    }
+
+    @Override
+    public Double getTotalBudgetByCustomerId(int customerId) {
+        return customerRepository.getTotalBudgetByCustomerId(customerId);
     }
 }
