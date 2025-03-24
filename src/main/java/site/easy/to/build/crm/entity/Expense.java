@@ -14,7 +14,7 @@ public class Expense {
     @Id
     @Column(name = "expense_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long expenseId;
 
     @NotNull(message = "Amount is required")
     @Positive(message = "Amount must be positive")
@@ -38,12 +38,12 @@ public class Expense {
     }
 
     // Getters and Setters
-    public Long getId() {
-        return id;
+    public Long getExpenseId() {
+        return expenseId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setExpenseId(Long id) {
+        this.expenseId = id;
     }
 
     public BigDecimal getAmount() {

@@ -3,6 +3,7 @@ package site.easy.to.build.crm.service.customer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
@@ -56,5 +57,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public long countByUserId(int userId) {
         return customerRepository.countByUserId(userId);
+    }
+
+    @Override
+    public List<CustomerStatisticsDTO> getCustomerStatistics() {
+        return customerRepository.getCustomerStatistics();
     }
 }
