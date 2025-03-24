@@ -109,7 +109,7 @@
                                         </td>
 
                                         <td>
-                                            <form th:action="${home + 'employee/expense/lead/' + lead.leadId}" method="post">
+                                            <form  th:if="${ lead.expense == null }" th:action="${home + 'employee/expense/lead/' + lead.leadId}" method="post">
                                                 <button type="submit" class="btn btn-success">
                                                     <i class="mdi mdi-currency-eur"></i>
                                                 </button>
