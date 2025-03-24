@@ -36,7 +36,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public  Expense save(Expense expense) {
-        if ( expense.getBudget().getBudgetId()==0 ){
+        if ( expense.getBudget() == null  ){
             expense.setBudget(null);
         }
         return  expenseRepository.save(expense);
