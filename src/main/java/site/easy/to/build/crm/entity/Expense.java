@@ -2,7 +2,9 @@ package site.easy.to.build.crm.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.groups.Default;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +28,7 @@ public class Expense {
     private LocalDate date;
 
     @ManyToOne
-    @JoinColumn(name = "budget_id", nullable = false)
+    @JoinColumn(name = "budget_id", nullable = true)
     private Budget budget;
 
     @Column(name = "description")
