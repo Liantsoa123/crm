@@ -30,4 +30,6 @@ public interface CustomerService {
     double getTotalExpensesTicketByCustomerId(int customerId);
 
     double getTotalExpensesLeadByCustomerId(int customerId);
+
+    double getTotalBudgetByCustomerId(int customerId);
 }

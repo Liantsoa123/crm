@@ -74,4 +74,9 @@ public class CustomerServiceImpl implements CustomerService {
     public double getTotalExpensesLeadByCustomerId(int customerId) {
         return customerRepository.getTotalExpensesLeadByCustomerId(customerId);
     }
+
+    @Override
+    public double getTotalBudgetByCustomerId(int customerId) {
+        return customerRepository.getTotalBudgetByCustomerId(customerId);
+    }
 }
