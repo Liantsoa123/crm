@@ -71,7 +71,9 @@ public class LeadApiController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        expenseServiceImpl.delete(lead.getExpense());
+        if (lead.getExpense() != null ){
+            expenseServiceImpl.delete(lead.getExpense());
+        }
         leadService.delete(lead);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
