@@ -26,32 +26,32 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     long countByUserId(int userId);
 
     @Query(value = """
-            SELECT new site.easy.to.build.crm.dto.CustomerStatisticsDTO(
-                c.name as customerName,
-                COUNT(DISTINCT t.ticketId) as ticketCount,
-                COUNT(DISTINCT l.leadId) as leadCount,
-                c.customerId as customerId,
-                SUM(b.amount) as totalBudget)
-            FROM Customer c
-            LEFT JOIN Ticket t ON c.customerId = t.customer.customerId
-            LEFT JOIN Lead l ON c.customerId = l.customer.customerId
-            join Budget b on c.customerId = b.customer.customerId
-            GROUP BY c.customerId, c.name
+                SELECT new site.easy.to.build.crm.dto.CustomerStatisticsDTO(
+                    c.name as customerName,
+                    COUNT(DISTINCT t.ticketId) as ticketCount, 
+                    COUNT(DISTINCT l.leadId) as leadCount,
+                    c.customerId as customerId,
+                    COALESCE(SUM(b.amount), 0) as totalBudget)
+                FROM Customer c
+                LEFT JOIN Ticket t ON c.customerId = t.customer.customerId
+                LEFT JOIN Lead l ON c.customerId = l.customer.customerId
+                LEFT JOIN Budget b ON c.customerId = b.customer.customerId
+                GROUP BY c.customerId, c.name
             """)
     List<CustomerStatisticsDTO> getCustomerStatistics();
 
     @Query(value = """
-        SELECT COALESCE(SUM(e.amount), 0) FROM Ticket t 
-        join Expense e on e.expenseId = t.expense.expenseId 
-        where t.customer.customerId = :customerId
-    """)
+                SELECT COALESCE(SUM(e.amount), 0) FROM Ticket t 
+                join Expense e on e.expenseId = t.expense.expenseId 
+                where t.customer.customerId = :customerId
+            """)
     double getTotalExpensesTicketByCustomerId(int customerId);
 
     @Query(value = """
-            SELECT COALESCE(SUM(e.amount), 0) FROM Lead l
-            join Expense e on e.expenseId = l.expense.expenseId
-            where l.customer.customerId = :customerId
-    """)
+                    SELECT COALESCE(SUM(e.amount), 0) FROM Lead l
+                    join Expense e on e.expenseId = l.expense.expenseId
+                    where l.customer.customerId = :customerId
+            """)
     double getTotalExpensesLeadByCustomerId(int customerId);
 
 }
