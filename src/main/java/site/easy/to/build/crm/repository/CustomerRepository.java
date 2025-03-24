@@ -55,7 +55,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
     double getTotalExpensesLeadByCustomerId(int customerId);
 
     @Query(value = """
-                SELECT COALESCE(SUM(b.amount), 0) FROM Budget b group by b.customer.customerId
+                SELECT COALESCE(SUM(b.amount), 0) FROM Budget b where b.customer.customerId = :customerId group by b.customer.customerId
             """)
-    double getTotalBudgetByCustomerId(int customerId);
+    Double getTotalBudgetByCustomerId(int customerId);
 }
