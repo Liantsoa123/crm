@@ -7,8 +7,10 @@ import site.easy.to.build.crm.entity.AlertRate;
 import site.easy.to.build.crm.entity.Budget;
 import site.easy.to.build.crm.entity.Expense;
 import site.easy.to.build.crm.service.alertRate.AlertRateService;
+import site.easy.to.build.crm.service.customer.CustomerServiceImpl;
 import site.easy.to.build.crm.service.expense.ExpenseService;
 
+import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,14 +21,16 @@ public class BudgetStatusService {
     private final BudgetService budgetService;
     private final ExpenseService expenseService;
     private final AlertRateService alertRateService;
+    private final CustomerServiceImpl customerServiceImpl;
 
     @Autowired
     public BudgetStatusService(BudgetService budgetService,
                                ExpenseService expenseService,
-                               AlertRateService alertRateService) {
+                               AlertRateService alertRateService, CustomerServiceImpl customerServiceImpl) {
         this.budgetService = budgetService;
         this.expenseService = expenseService;
         this.alertRateService = alertRateService;
+        this.customerServiceImpl = customerServiceImpl;
     }
 
     public List<BudgetStatusDTO> getBudgetStatusForCustomer(int customerId) {
@@ -53,15 +57,24 @@ public class BudgetStatusService {
         Double alertRate = alertRates.isEmpty() ? 0.2 : alertRates.get(0).getRate();
         List<BudgetStatusDTO> budgetStatusDTOS = getBudgetStatusForCustomer(customerId);
 
-        BigDecimal totalRemainingAmount = budgetStatusDTOS.stream()
+        /*BigDecimal totalRemainingAmount = budgetStatusDTOS.stream()
                 .map(BudgetStatusDTO::getRemainingAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add);*/
+
+        double totalexpenseTicket = customerServiceImpl.getTotalExpensesTicketByCustomerId(customerId);
+        double totalexpenseLead = customerServiceImpl.getTotalExpensesLeadByCustomerId(customerId);
+        System.out.println("totalexpenseLead = " + totalexpenseLead);
+        System.out.println("totalexpenseTicket = " + totalexpenseTicket);
+
+
 
         BigDecimal totalBudgetAmount = budgetStatusDTOS.stream()
                 .map(BudgetStatusDTO::getBudget)
                 .map(Budget::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        BigDecimal totalRemainingAmount = totalBudgetAmount.subtract(BigDecimal.valueOf(totalexpenseLead + totalexpenseTicket));
+        System.out.println("totalBudgetAmount = " + totalBudgetAmount);
 
 
         if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {

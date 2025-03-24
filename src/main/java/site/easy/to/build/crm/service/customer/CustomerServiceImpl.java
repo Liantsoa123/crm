@@ -7,6 +7,7 @@ import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -62,5 +63,15 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerStatisticsDTO> getCustomerStatistics() {
         return customerRepository.getCustomerStatistics();
+    }
+
+    @Override
+    public double getTotalExpensesTicketByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesTicketByCustomerId(customerId);
+    }
+
+    @Override
+    public double getTotalExpensesLeadByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesLeadByCustomerId(customerId);
     }
 }

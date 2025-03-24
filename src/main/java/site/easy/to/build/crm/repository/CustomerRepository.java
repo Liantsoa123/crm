@@ -8,6 +8,7 @@ import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.entity.Customer;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
@@ -38,4 +39,19 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
             GROUP BY c.customerId, c.name
             """)
     List<CustomerStatisticsDTO> getCustomerStatistics();
+
+    @Query(value = """
+        SELECT COALESCE(SUM(e.amount), 0) FROM Ticket t 
+        join Expense e on e.expenseId = t.expense.expenseId 
+        where t.customer.customerId = :customerId
+    """)
+    double getTotalExpensesTicketByCustomerId(int customerId);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(e.amount), 0) FROM Lead l
+            join Expense e on e.expenseId = l.expense.expenseId
+            where l.customer.customerId = :customerId
+    """)
+    double getTotalExpensesLeadByCustomerId(int customerId);
+
 }
