@@ -4,11 +4,24 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvParser;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import site.easy.to.build.crm.dto.BudgetCsvDTO;
+import site.easy.to.build.crm.dto.CustomerCsvDTO;
+import site.easy.to.build.crm.dto.TicketLeadCsvDTO;
+import site.easy.to.build.crm.entity.Budget;
+import site.easy.to.build.crm.entity.Customer;
+import site.easy.to.build.crm.entity.Ticket;
+import site.easy.to.build.crm.entity.User;
+import site.easy.to.build.crm.service.budget.BudgetCsvDTOServiceImpl;
+import site.easy.to.build.crm.service.customer.CustomerCsvDTOServiceImpl;
+import site.easy.to.build.crm.service.user.UserServiceImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +36,12 @@ public class CsvImportService {
 
     private final CsvMapper csvMapper = new CsvMapper();
     private final Validator validator;
+    private final CustomerCsvDTOServiceImpl customerCsvDTOServiceImpl;
+    private final BudgetCsvDTOServiceImpl budgetCsvDTOServiceImpl;
+    private final UserServiceImpl userServiceImpl;
+
+    @PersistenceContext
+    private final EntityManager entityManager ;
 
     public <T> List<T> read(Class<T> clazz, InputStream inputStream, StringBuilder errorMessage) throws IOException {
         // Configure CSV mapper
@@ -48,5 +67,24 @@ public class CsvImportService {
         }
 
         return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void saveALl (List<CustomerCsvDTO> customerCsvDTOS , List<BudgetCsvDTO> budgetCsvDTOS, List<TicketLeadCsvDTO> ticketLeadCsvDTOS , StringBuilder errorMessage)throws  Exception{
+        User admin = userServiceImpl.findFirstByOrderByIdAsc();
+        List<Customer> customers = customerCsvDTOServiceImpl.convertToCustomers(customerCsvDTOS, admin);
+        for ( Customer customer: customers ){
+            entityManager.persist(customer.getCustomerLoginInfo());
+            entityManager.persist(customer);
+        }
+
+        List<Budget> budgets = budgetCsvDTOServiceImpl.convertToBudgets(budgetCsvDTOS, errorMessage);
+        for ( Budget budget: budgets ){
+            entityManager.persist(budget);
+        }
+        System.out.println("errorMessage=" + errorMessage.length());
+        if ( errorMessage.length() > 0 ){
+            throw new Exception(errorMessage.toString());
+        }
     }
 }
