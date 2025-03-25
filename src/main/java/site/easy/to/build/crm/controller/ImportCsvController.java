@@ -57,18 +57,10 @@ public class ImportCsvController {
         StringBuilder customerErrors = new StringBuilder();
         StringBuilder ticketLeadErrors = new StringBuilder();
         StringBuilder budgetErrors = new StringBuilder();
-
         try {
-            // Process Customer CSV
             List<CustomerCsvDTO> customers = csvImportService.read(CustomerCsvDTO.class, customerFile.getInputStream(), customerErrors);
-
-            // Process Ticket and Lead CSV
             List<TicketLeadCsvDTO> ticketLeads = csvImportService.read(TicketLeadCsvDTO.class, ticketLeadFile.getInputStream(), ticketLeadErrors);
-
-            // Process Budget CSV
             List<BudgetCsvDTO> budgets = csvImportService.read(BudgetCsvDTO.class, budgetFile.getInputStream(), budgetErrors);
-
-            // Add error messages to the model
             if (customerErrors.length() > 0) {
                 model.addAttribute("customerErrors", customerErrors.toString());
             }
@@ -78,28 +70,20 @@ public class ImportCsvController {
             if (budgetErrors.length() > 0) {
                 model.addAttribute("budgetErrors", budgetErrors.toString());
             }
-
-            // Check if there are any errors
             if (customerErrors.length() > 0 || ticketLeadErrors.length() > 0 || budgetErrors.length() > 0) {
                 return "import/form";
             }
-
-            // Save all data
             StringBuilder errorMessage = new StringBuilder();
             csvImportService.saveALl(customers, budgets, ticketLeads, errorMessage );
-
             if (!errorMessage.isEmpty()) {
                 model.addAttribute("errorMessage", errorMessage.toString());
                 return "import/form";
             }
-
-            // Add success message
             model.addAttribute("successMessage", "CSV files imported successfully!");
         } catch (Exception e) {
-            model.addAttribute("errorMessage", "Error reading CSV files: " + e.getMessage() +". Please check the files and try again.");
+            model.addAttribute("errorMessage",   e.getMessage() );
             e.printStackTrace();
         }
-
         return "import/form";
     }
 
