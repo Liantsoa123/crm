@@ -26,7 +26,7 @@ public class BudgetCsvDTOServiceImpl implements BudgetCsvDTOService {
         Budget budget = new Budget();
         Customer customer = customerServiceImpl.findByEmail(budgetCsvDTO.getCustomerEmail());
         if (customer == null) {
-            errorMessage.append("Customer with email " + budgetCsvDTO.getCustomerEmail() + " not found in the budget row " + row);
+            errorMessage.append("<li> Customer not found for the budget in row " + row + "</li>");
             return null;
         }
         budget.setName("Budget " + customer.getName());
