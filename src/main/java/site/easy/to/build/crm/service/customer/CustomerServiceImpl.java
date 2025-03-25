@@ -95,4 +95,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Double getTotalBudgetByCustomerId(int customerId) {
         return customerRepository.getTotalBudgetByCustomerId(customerId);
     }
+
+    @Override
+    public List<Customer> saveAll(List<Customer> customers) {
+        return customerRepository.saveAll(customers);
+    }
 }

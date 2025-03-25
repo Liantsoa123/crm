@@ -6,6 +6,7 @@ import site.easy.to.build.crm.entity.Customer;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.ListResourceBundle;
 
 public interface CustomerService {
 
@@ -32,4 +33,6 @@ public interface CustomerService {
     double getTotalExpensesLeadByCustomerId(int customerId);
 
     Double getTotalBudgetByCustomerId(int customerId);
+
+    List<Customer> saveAll(List<Customer> customers);
 }
