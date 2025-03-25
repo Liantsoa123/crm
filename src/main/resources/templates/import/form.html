@@ -37,57 +37,68 @@
 
             <!-- Page Content -->
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="card-title">Import CSV File</h4>
-                            
-                            <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                                <span th:text="${successMessage}"></span>
-                            </div>
+                            <h4 class="card-title">Import de données CSV</h4>
+
+                            <!-- Messages d'erreur -->
                             <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
                                 <span th:text="${errorMessage}"></span>
                             </div>
+                            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                                <span th:text="${successMessage}"></span>
+                            </div>
 
-                            <form th:action="@{/manager/importCsv}" method="post" enctype="multipart/form-data">
+
+
+
+                            <!-- Formulaire d'import -->
+                            <form th:action="@{/manager/system/importCsv}" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
-                                    <label for="csvFile">Choose CSV File 1 :</label>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="csvFile" name="file1"
-                                               accept=".csv" required>
-                                        <label class="custom-file-label" for="csvFile">Select file...</label>
-                                    </div>
+                                    <label for="customerFile">Fichier CSV des clients</label>
+                                    <input type="file" class="form-control-file" id="customerFile" name="customerFile" accept=".csv" required>
+                                    <small class="form-text text-muted">Format attendu: customer_name,customer_email</small>
+                                </div>
+                                <div th:if="${customerErrors}" class="alert alert-warning" role="alert">
+                                    <h5>Erreurs dans le fichier customers:</h5>
+                                    <pre th:text="${customerErrors}"></pre>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ticketLeadFile">Fichier CSV des tickets/leads</label>
+                                    <input type="file" class="form-control-file" id="ticketLeadFile" name="ticketLeadFile" accept=".csv" required>
+                                    <small class="form-text text-muted">Format attendu: customer_email,type,subject,status</small>
+                                </div>
+                                <div th:if="${ticketLeadErrors}" class="alert alert-warning" role="alert">
+                                    <h5>Erreurs dans le fichier tickets/leads:</h5>
+                                    <pre th:text="${ticketLeadErrors}"></pre>
+                                </div>
+                                <div class="form-group">
+                                    <label for="budgetFile">Fichier CSV des budgets</label>
+                                    <input type="file" class="form-control-file" id="budgetFile" name="budgetFile" accept=".csv" required>
+                                    <small class="form-text text-muted">Format attendu: customer_email,name,amount,start_date,end_date</small>
+                                </div>
+                                <div th:if="${budgetErrors}" class="alert alert-warning" role="alert">
+                                    <h5>Erreurs dans le fichier budgets:</h5>
+                                    <pre th:text="${budgetErrors}"></pre>
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="csvFile">Choose CSV File 2 :</label>
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="csvFile" name="file1"
-                                               accept=".csv" required>
-                                        <label class="custom-file-label" for="csvFile">Select file...</label>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Import Data</button>
-                                <a th:href="@{/manager/dashboard}" class="btn btn-secondary ml-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Importer</button>
+                                <a th:href="@{/}" class="btn btn-secondary">Annuler</a>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- End Page Content -->
-
-            <!-- Right sidebar -->
-            <div th:insert="~{/general/right-sidebar.html}"></div>
         </div>
-        <!-- End Container fluid -->
-    </div>
-    <!-- End Page wrapper -->
 
-    <!-- footer -->
+        <!-- Right sidebar -->
+        <div th:insert="~{/general/right-sidebar.html}"></div>
+    </div>
+
+    <!-- Footer -->
     <div th:insert="~{/general/footer.html}"></div>
 </div>
-<!-- End Wrapper -->
 
 <!-- All Jquery -->
 <script th:inline="javascript">
@@ -100,14 +111,6 @@
 <script th:src="@{/js/library/waves.js}" type="text/javascript"></script>
 <script th:src="@{/js/library/sidebarmenu.js}" type="text/javascript"></script>
 <script th:src="@{/js/library/custom.min.js}" type="text/javascript"></script>
-
-<script>
-// Display selected filename in custom file input
-$('.custom-file-input').on('change', function() {
-    let fileName = $(this).val().split('\\').pop();
-    $(this).next('.custom-file-label').html(fileName);
-});
-</script>
 
 </body>
 </html>
