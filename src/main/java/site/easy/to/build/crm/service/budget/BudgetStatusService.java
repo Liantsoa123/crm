@@ -78,9 +78,9 @@ public class BudgetStatusService {
 
 
         if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {
-            return "ALERTE: Le total des budgets a atteint un niveau critique. Reste: " + totalRemainingAmount + " €";
+            return "ALERTE: Le total des budgets a atteint un niveau critique. Reste: " + totalRemainingAmount + " €" + " de " +(alertRate*100) + "%" + " du budget total"+ totalBudgetAmount + " €";
         } else {
-            return "Total des budgets : Reste " + totalRemainingAmount + " €";
+            return "Total des budgets : Reste " + totalRemainingAmount + " €"+ " de " +(alertRate*100) + "%" + " du budget total"+ totalBudgetAmount + " €";
         }
 
     }
