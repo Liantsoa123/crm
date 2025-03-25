@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `customer` (
 CREATE TABLE IF NOT EXISTS `budget` (
   `budget_id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `amount` decimal(10,2) NOT NULL,
+  `amount` decimal(15,2) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
   `customer_id` int unsigned NOT NULL,

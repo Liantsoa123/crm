@@ -77,10 +77,10 @@ public class BudgetStatusService {
         System.out.println("totalBudgetAmount = " + totalBudgetAmount);
 
 
-        if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {
-            return "ALERTE: Le total des budgets a atteint un niveau critique. Reste: " + totalRemainingAmount + " €";
+       if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {
+            return "ALERTE: Le total des budgets a atteint un niveau critique. Il reste " + totalRemainingAmount + " € (" + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
         } else {
-            return "Total des budgets : Reste " + totalRemainingAmount + " €";
+            return "Total des budgets : Il reste " + totalRemainingAmount + " € (" + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
         }
 
     }

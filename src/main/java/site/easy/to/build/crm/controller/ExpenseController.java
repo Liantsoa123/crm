@@ -13,10 +13,12 @@ import site.easy.to.build.crm.entity.Lead;
 import site.easy.to.build.crm.entity.Ticket;
 import site.easy.to.build.crm.service.budget.BudgetServiceImpl;
 import site.easy.to.build.crm.service.budget.BudgetStatusService;
+import site.easy.to.build.crm.service.customer.CustomerServiceImpl;
 import site.easy.to.build.crm.service.expense.ExpenseService;
 import site.easy.to.build.crm.service.lead.LeadService;
 import site.easy.to.build.crm.service.lead.LeadServiceImpl;
 import site.easy.to.build.crm.service.ticket.TicketServiceImpl;
+import site.easy.to.build.crm.service.user.UserServiceImpl;
 import site.easy.to.build.crm.util.AuthenticationUtils;
 
 import java.util.List;
@@ -32,9 +34,11 @@ public class ExpenseController {
     private final BudgetServiceImpl budgetServiceImpl;
     private final TicketServiceImpl ticketServiceImpl;
     private final BudgetStatusService budgetStatusService;
+    private final UserServiceImpl userServiceImpl;
+    private final CustomerServiceImpl customerServiceImpl;
 
     @Autowired
-    public ExpenseController(ExpenseService expenseService, LeadService leadService, AuthenticationUtils authenticationUtils, LeadServiceImpl leadServiceImpl, BudgetServiceImpl budgetServiceImpl, TicketServiceImpl ticketServiceImpl, BudgetStatusService budgetStatusService) {
+    public ExpenseController(ExpenseService expenseService, LeadService leadService, AuthenticationUtils authenticationUtils, LeadServiceImpl leadServiceImpl, BudgetServiceImpl budgetServiceImpl, TicketServiceImpl ticketServiceImpl, BudgetStatusService budgetStatusService, UserServiceImpl userServiceImpl, CustomerServiceImpl customerServiceImpl) {
         this.expenseService = expenseService;
         this.leadService = leadService;
         this.authenticationUtils = authenticationUtils;
@@ -42,6 +46,8 @@ public class ExpenseController {
         this.budgetServiceImpl = budgetServiceImpl;
         this.ticketServiceImpl = ticketServiceImpl;
         this.budgetStatusService = budgetStatusService;
+        this.userServiceImpl = userServiceImpl;
+        this.customerServiceImpl = customerServiceImpl;
     }
 
     @PostMapping("/lead/{leadId}")
@@ -58,11 +64,15 @@ public class ExpenseController {
 
         String alertMesaage = budgetStatusService.alertMessage(lead.getCustomer().getCustomerId());
 
+        //Get Total Reste of Budgets global
+        double totalResteGlobal = customerServiceImpl.getTotalResteBudgetByCustomerId(lead.getCustomer().getCustomerId());
+
         model.addAttribute("lead", lead);
         model.addAttribute("expense", expense);
         model.addAttribute("budgetStatus", budgetStatusDTOS);
         model.addAttribute("alertMessage", alertMesaage);
         model.addAttribute("ticketId", null);
+        model.addAttribute("totalResteGlobal", totalResteGlobal);
 
 
         return "expense/create-expense";

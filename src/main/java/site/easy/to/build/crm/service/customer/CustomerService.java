@@ -34,5 +34,7 @@ public interface CustomerService {
 
     Double getTotalBudgetByCustomerId(int customerId);
 
+    double getTotalResteBudgetByCustomerId(int customerId);
+
     List<Customer> saveAll(List<Customer> customers);
 }
