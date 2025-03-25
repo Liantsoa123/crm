@@ -45,16 +45,12 @@ public class SystemController {
     }
 
     @GetMapping("reset")
-    public String showResetPage(Model model,
-                                @ModelAttribute("successMessage") String successMessage,
-                                @ModelAttribute("errorMessage") String errorMessage) {
-        if (!successMessage.isEmpty()) {
-            System.out.println(successMessage);
-            model.addAttribute("successMessage", successMessage);
+    public String showResetPage(Authentication authentication, RedirectAttributes redirectAttributes ) {
+        // Check if user has manager role
+        if (!AuthorizationUtil.hasRole(authentication, "ROLE_MANAGER")) {
+            return "error/access-denied";
         }
-        if (!errorMessage.isEmpty()) {
-            model.addAttribute("errorMessage", errorMessage);
-        }
+
         return "reset/reset";
     }
 
