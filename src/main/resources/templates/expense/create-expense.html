@@ -57,6 +57,7 @@
                             <form th:object="${expense}" th:action="@{/employee/expense/save-expense}" method="post">
                                 <input type="hidden" th:if="${leadId}" name="leadId" th:value="${leadId}"/>
                                 <input type="hidden" th:if="${ticketId}" name="ticketId" th:value="${ticketId}"/>
+                                <input type="hidden" th:if="${totalResteGlobal}" id="totalResteGlobal" name="customerId" th:value="${totalResteGlobal}"/>
 
                                 <div th:if="${alertMessage}" class="alert" th:classappend="${alertMessage.contains('ALERTE') ? 'alert-danger' : 'alert-warning'}" role="alert">
                                     <span th:text="${alertMessage}"></span>
@@ -79,7 +80,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">€</span>
                                         </div>
-                                        <input type="number" step="0.01" th:field="*{amount}" class="form-control"
+                                        <input type="number" step="0.01" th:field="*{amount}" id="amount" class="form-control"
                                                required>
                                     </div>
                                     <div class="input-group">
@@ -108,10 +109,12 @@
                                                     th:value="${budgetStatu.budget.budgetId}"
                                                     th:text="${budgetStatu.budget.name}"
                                                     th:data-alert-message="${budgetStatu.alertMessage}"
-                                                    th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}"
-                                                    th:data-remaining-amount="${budgetStatu.remainingAmount}">
+                                                    th:data-is-alert="${budgetStatu.alertMessage != null && budgetStatu.alertMessage.contains('ALERTE')}">
                                             </option>
                                         </select>
+                                    </div>
+                                    <div>
+                                        <p th:text="${totalResteGlobal}" >  </p>
                                     </div>
                                     <div class="input-group">
                                         <span class="text-danger" th:if="${#fields.hasErrors('budget')}"
@@ -159,6 +162,9 @@
 <!-- Date picker plugins -->
 <script th:src="@{/js/library/bootstrap-datepicker.min.js}"></script>
 <script>
+
+
+
     // Initialisation des datepickers
     jQuery('.mydatepicker').datepicker({
         format: 'yyyy-mm-dd',
@@ -168,6 +174,12 @@
 
     // Ajout d'un écouteur pour le select des budgets
     jQuery(document).ready(function () {
+
+        var totalResteGlobal = document.getElementById('totalResteGlobal').value;
+        var expenseAmount = parseFloat($('input[name="amount"]').val());
+        console.log(totalResteGlobal);
+        console.log(expenseAmount);
+
         /*// Créer un élément div pour afficher le message d'alerte et l'insérer avant le label et le select
         var alertDiv = $('<div class="alert mt-2 mb-2" role="alert" style="display: none;"></div>');
         $('label:contains("Budgets")').before(alertDiv);
@@ -203,17 +215,20 @@
         */
         // Modifier la soumission du formulaire pour vérifier le montant restant
         $('form').on('submit', function (e) {
-            var selectedOption = $('select[name="budget"]').find('option:selected');
-            var remainingAmount = parseFloat(selectedOption.data('remaining-amount'));
-            var expenseAmount = parseFloat($('input[name="amount"]').val());
-
-            // Vérifier si le montant de la dépense est supérieur au montant restant du budget
-            if (!isNaN(remainingAmount) && !isNaN(expenseAmount) && expenseAmount > remainingAmount) {
-                // Empêcher la soumission du formulaire pour afficher la confirmation
+            // Récupérer les valeurs correctement
+            var totalResteGlobal = parseFloat($('#totalResteGlobal').val()); // Utiliser .val() au lieu de .value()
+            var expenseAmount = parseFloat($('#amount').val()); // Utiliser .val() pour récupérer la valeur
+        
+            console.log('Montant restant:', totalResteGlobal);
+            console.log('Montant dépense:', expenseAmount);
+        
+            // Vérifier si le montant de la dépense est supérieur au montant restant
+            if (!isNaN(totalResteGlobal) && !isNaN(expenseAmount) && expenseAmount > totalResteGlobal) {
+                // Empêcher la soumission du formulaire
                 e.preventDefault();
-
+        
                 // Afficher la popup de confirmation
-                if (confirm("Attention : Le montant de la dépense (" + expenseAmount + " €) est supérieur au montant restant du budget (" + remainingAmount + " €). Voulez-vous continuer ?")) {
+                if (confirm("Attention : Le montant de la dépense (" + expenseAmount.toFixed(2) + " €) est supérieur au montant restant du budget (" + totalResteGlobal.toFixed(2) + " €). Voulez-vous continuer ?")) {
                     // Si l'utilisateur confirme, soumettre le formulaire
                     $(this).unbind('submit').submit();
                 }
