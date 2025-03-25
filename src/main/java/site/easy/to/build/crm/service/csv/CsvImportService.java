@@ -15,12 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import site.easy.to.build.crm.dto.BudgetCsvDTO;
 import site.easy.to.build.crm.dto.CustomerCsvDTO;
 import site.easy.to.build.crm.dto.TicketLeadCsvDTO;
-import site.easy.to.build.crm.entity.Budget;
-import site.easy.to.build.crm.entity.Customer;
-import site.easy.to.build.crm.entity.Ticket;
-import site.easy.to.build.crm.entity.User;
+import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.service.budget.BudgetCsvDTOServiceImpl;
 import site.easy.to.build.crm.service.customer.CustomerCsvDTOServiceImpl;
+import site.easy.to.build.crm.service.ticketleadCsvDTO.TicketLeadCsvDTOServiceImpl;
 import site.easy.to.build.crm.service.user.UserServiceImpl;
 
 import java.io.IOException;
@@ -39,6 +37,7 @@ public class CsvImportService {
     private final CustomerCsvDTOServiceImpl customerCsvDTOServiceImpl;
     private final BudgetCsvDTOServiceImpl budgetCsvDTOServiceImpl;
     private final UserServiceImpl userServiceImpl;
+    private final TicketLeadCsvDTOServiceImpl ticketLeadCsvDTOServiceImpl;
 
     @PersistenceContext
     private final EntityManager entityManager ;
@@ -81,6 +80,24 @@ public class CsvImportService {
         List<Budget> budgets = budgetCsvDTOServiceImpl.convertToBudgets(budgetCsvDTOS, errorMessage);
         for ( Budget budget: budgets ){
             entityManager.persist(budget);
+        }
+
+        System.out.println("size ticket = " + ticketLeadCsvDTOS.size());
+        for (int i = 0; i < ticketLeadCsvDTOS.size(); i++) {
+            TicketLeadCsvDTO ticketLeadCsvDTO = ticketLeadCsvDTOS.get(i);
+            if (ticketLeadCsvDTO.getType().equalsIgnoreCase("ticket")){
+                Ticket ticket = ticketLeadCsvDTOServiceImpl.convertToTicket(ticketLeadCsvDTO, errorMessage, i);
+                if (ticket != null) {
+                    entityManager.persist(ticket.getExpense());
+                    entityManager.persist(ticket);
+                }
+            }else if (ticketLeadCsvDTO.getType().equalsIgnoreCase("lead")){
+                Lead lead = ticketLeadCsvDTOServiceImpl.convertToLead(ticketLeadCsvDTO, errorMessage, i);
+                if (lead != null) {
+                    entityManager.persist(lead.getExpense());
+                    entityManager.persist(lead);
+                }
+            }
         }
         System.out.println("errorMessage=" + errorMessage.length());
         if ( errorMessage.length() > 0 ){
