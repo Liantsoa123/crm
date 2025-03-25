@@ -18,6 +18,7 @@ import site.easy.to.build.crm.dto.TicketLeadCsvDTO;
 import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.service.budget.BudgetCsvDTOServiceImpl;
 import site.easy.to.build.crm.service.customer.CustomerCsvDTOServiceImpl;
+import site.easy.to.build.crm.service.customer.CustomerServiceImpl;
 import site.easy.to.build.crm.service.ticketleadCsvDTO.TicketLeadCsvDTOServiceImpl;
 import site.easy.to.build.crm.service.user.UserServiceImpl;
 
@@ -41,6 +42,7 @@ public class CsvImportService {
 
     @PersistenceContext
     private final EntityManager entityManager ;
+    private final CustomerServiceImpl customerServiceImpl;
 
     public <T> List<T> read(Class<T> clazz, InputStream inputStream, StringBuilder errorMessage) throws IOException {
         // Configure CSV mapper
@@ -72,7 +74,13 @@ public class CsvImportService {
     public void saveALl (List<CustomerCsvDTO> customerCsvDTOS , List<BudgetCsvDTO> budgetCsvDTOS, List<TicketLeadCsvDTO> ticketLeadCsvDTOS , StringBuilder errorMessage)throws  Exception{
         User admin = userServiceImpl.findFirstByOrderByIdAsc();
         List<Customer> customers = customerCsvDTOServiceImpl.convertToCustomers(customerCsvDTOS, admin);
-        for ( Customer customer: customers ){
+        for ( int i =  0; i < customers.size(); i++ ){
+            Customer customer = customers.get(i);
+            Customer customer1 = customerServiceImpl.findByEmail(customer.getEmail());
+            if (customer1 != null){
+                errorMessage.append("<li>  Customer already exists for the email " + customer.getEmail() + "in the row "+ (i+1)  +"  </li>");
+                continue;
+            }
             entityManager.persist(customer.getCustomerLoginInfo());
             entityManager.persist(customer);
         }
@@ -82,7 +90,6 @@ public class CsvImportService {
             entityManager.persist(budget);
         }
 
-        System.out.println("size ticket = " + ticketLeadCsvDTOS.size());
         for (int i = 0; i < ticketLeadCsvDTOS.size(); i++) {
             TicketLeadCsvDTO ticketLeadCsvDTO = ticketLeadCsvDTOS.get(i);
             if (ticketLeadCsvDTO.getType().equalsIgnoreCase("ticket")){
