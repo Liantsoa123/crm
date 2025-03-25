@@ -40,12 +40,12 @@ public class TicketLeadCsvDTOServiceImpl implements TicketLeadCsvDTOService {
     @Override
     public Ticket convertToTicket(TicketLeadCsvDTO ticketLeadCsvDTO, StringBuilder errorMessage, int row) {
         if (!ticketLeadCsvDTO.getStatus().matches("^(open|assigned|on-hold|in-progress|resolved|closed|reopened|pending-customer-response|escalated|archived)$")) {
-            errorMessage.append("Invalid status for the ticket in row " + row);
+            errorMessage.append(  "<li> Invalid status for the ticket in row " + row + "</li>");
             return null;
         }
         Customer customer = customerServiceImpl.findByEmail(ticketLeadCsvDTO.getEmail());
         if (customer == null) {
-            errorMessage.append("Customer not found for the ticket in row " + row);
+            errorMessage.append(" <li> Customer not found for the ticket in row " + row + "</li>");
             return null;
         }
         Ticket ticket = new Ticket();
@@ -64,12 +64,12 @@ public class TicketLeadCsvDTOServiceImpl implements TicketLeadCsvDTOService {
     @Override
     public Lead convertToLead(TicketLeadCsvDTO ticketLeadCsvDTO, StringBuilder errorMessage, int row) {
         if (!ticketLeadCsvDTO.getStatus().matches("^(meeting-to-schedule|scheduled|archived|success|assign-to-sales)$")){
-            errorMessage.append("Invalid status for the lead in row " + row);
+            errorMessage.append("<li> Invalid status for the lead in row " + row + "</li>");
             return null;
         }
         Customer customer = customerServiceImpl.findByEmail(ticketLeadCsvDTO.getEmail());
         if (customer == null) {
-            errorMessage.append("Customer not found for the lead in row " + row);
+            errorMessage.append("<li> Customer not found for the lead in row " + row + "</li>");
             return null;
         }
         Lead lead = new Lead();
