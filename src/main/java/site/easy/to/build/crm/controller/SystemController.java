@@ -4,9 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.processor.element.AbstractAttributeTagProcessor;
 import site.easy.to.build.crm.service.system.SystemService;
@@ -52,13 +51,5 @@ public class SystemController {
             model.addAttribute("errorMessage", errorMessage);
         }
         return "reset/reset";
-    }
-
-    @GetMapping("/importCsv/form")
-    public String showImportForm(Authentication authentication, Model model){
-        if (!AuthorizationUtil.hasRole(authentication,"ROLE_MANAGER")){
-            return "error/access-denied";
-        }
-        return "import/form";
     }
 }
