@@ -11,6 +11,8 @@ import site.easy.to.build.crm.entity.User;
 import site.easy.to.build.crm.util.EmailTokenUtils;
 
 import javax.swing.text.IconView;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -35,4 +37,15 @@ public class CustomerCsvDTOServiceImpl  implements CustomerCsvDTOService{
     customer.setUser(admin);
     return customer;
   }
+
+  @Override
+  public List<Customer> convertToCustomers(List<CustomerCsvDTO> customerCsvDTOs, User admin) {
+    List<Customer> customers = new ArrayList<>();
+    for ( CustomerCsvDTO customerCsvDTO : customerCsvDTOs ){
+        customers.add(convertToCustomer(customerCsvDTO, admin));
+    }
+    return  customers;
+  }
+
+
 }
