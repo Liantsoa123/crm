@@ -12,6 +12,7 @@ import site.easy.to.build.crm.service.expense.ExpenseService;
 
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,13 +75,19 @@ public class BudgetStatusService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalRemainingAmount = totalBudgetAmount.subtract(BigDecimal.valueOf(totalexpenseLead + totalexpenseTicket));
-        System.out.println("totalBudgetAmount = " + totalBudgetAmount);
+        BigDecimal totalExpense = BigDecimal.valueOf(totalexpenseLead + totalexpenseTicket);
 
+        System.out.println("Total budget initial = " + totalBudgetAmount);
+        System.out.println("Total Depense = " + totalExpense);
+        System.out.println("Total Restant  = " + totalRemainingAmount);
+        System.out.println("Alert Rate = " + alertRate * 100 + "%");
+        System.out.println("Depense %= " + totalExpense.divide(totalBudgetAmount, 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)) + "%");
+        System.out.println("Restant %= " + totalRemainingAmount.divide(totalBudgetAmount, 2, BigDecimal.ROUND_HALF_UP).multiply(BigDecimal.valueOf(100)) + "%");
 
-       if (totalRemainingAmount.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) < 1) {
-            return "ALERTE: Le total des budgets a atteint un niveau critique. Il reste " + totalRemainingAmount + " € (" + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
+       if (totalExpense.compareTo(totalBudgetAmount.multiply(BigDecimal.valueOf(alertRate))) >= 0) {
+            return "ALERTE: Le total des budgets a atteint un niveau critique. Il reste " + totalRemainingAmount + " €  (limite =  " + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
         } else {
-            return "Total des budgets : Il reste " + totalRemainingAmount + " € (" + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
+            return "Total des budgets : Il reste " + totalRemainingAmount + " € (limite = " + (alertRate * 100) + "% du budget total de " + totalBudgetAmount + " €).";
         }
 
     }
