@@ -1,7 +1,10 @@
 package site.easy.to.build.crm.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -11,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import site.easy.to.build.crm.dto.CustomerInfoDTO;
 import site.easy.to.build.crm.entity.*;
 import site.easy.to.build.crm.google.service.acess.GoogleAccessService;
 import site.easy.to.build.crm.google.service.gmail.GoogleGmailApiService;
@@ -18,8 +22,11 @@ import site.easy.to.build.crm.service.budget.BudgetServiceImpl;
 import site.easy.to.build.crm.service.contract.ContractService;
 import site.easy.to.build.crm.service.customer.CustomerLoginInfoService;
 import site.easy.to.build.crm.service.customer.CustomerService;
+import site.easy.to.build.crm.service.customer.CustomerServiceImpl;
 import site.easy.to.build.crm.service.lead.LeadService;
+import site.easy.to.build.crm.service.lead.LeadServiceImpl;
 import site.easy.to.build.crm.service.ticket.TicketService;
+import site.easy.to.build.crm.service.ticket.TicketServiceImpl;
 import site.easy.to.build.crm.service.user.UserService;
 import site.easy.to.build.crm.util.AuthenticationUtils;
 import site.easy.to.build.crm.util.AuthorizationUtil;
@@ -42,11 +49,14 @@ public class CustomerController {
     private final ContractService contractService;
     private final LeadService leadService;
     private final BudgetServiceImpl budgetServiceImpl;
+    private final TicketServiceImpl ticketServiceImpl;
+    private final CustomerServiceImpl customerServiceImpl;
+    private final LeadServiceImpl leadServiceImpl;
 
     @Autowired
     public CustomerController(CustomerService customerService, UserService userService, CustomerLoginInfoService customerLoginInfoService,
                               AuthenticationUtils authenticationUtils, GoogleGmailApiService googleGmailApiService, Environment environment,
-                              TicketService ticketService, ContractService contractService, LeadService leadService, BudgetServiceImpl budgetServiceImpl) {
+                              TicketService ticketService, ContractService contractService, LeadService leadService, BudgetServiceImpl budgetServiceImpl, TicketServiceImpl ticketServiceImpl, CustomerServiceImpl customerServiceImpl, LeadServiceImpl leadServiceImpl) {
         this.customerService = customerService;
         this.userService = userService;
         this.customerLoginInfoService = customerLoginInfoService;
@@ -57,6 +67,9 @@ public class CustomerController {
         this.contractService = contractService;
         this.leadService = leadService;
         this.budgetServiceImpl = budgetServiceImpl;
+        this.ticketServiceImpl = ticketServiceImpl;
+        this.customerServiceImpl = customerServiceImpl;
+        this.leadServiceImpl = leadServiceImpl;
     }
 
     @GetMapping("/manager/all-customers")
@@ -212,5 +225,15 @@ public class CustomerController {
         return "redirect:/employee/customer/my-customers";
     }
 
+    @PostMapping("/duplicate/{idCustomer}")
+    public  ResponseEntity<CustomerInfoDTO> generateJson ( @PathVariable("idCustomer") int idCustomer) throws JsonProcessingException {
+        Customer customer = customerServiceImpl.findByCustomerId(idCustomer);
+        List<Ticket> tickets = ticketServiceImpl.getTicketByCustomerId(idCustomer);
+        List<Lead> lead = leadServiceImpl.getLeadByCustomerId(idCustomer);
+        CustomerInfoDTO customerInfoDTO = new CustomerInfoDTO( customer, tickets, lead );
+        return  ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION , "Attachement; fileName : \"json.json\'")
+                .body(customerInfoDTO);
+    }
 
 }
