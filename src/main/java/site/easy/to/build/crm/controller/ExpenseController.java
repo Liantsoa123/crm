@@ -90,6 +90,9 @@ public class ExpenseController {
 
         List<BudgetStatusDTO> budgetStatusDTOS = budgetStatusService.getBudgetStatusForCustomer(ticket.getCustomer().getCustomerId());
 
+        //Get Total Reste of Budgets global
+        double totalResteGlobal = customerServiceImpl.getTotalResteBudgetByCustomerId(ticket.getCustomer().getCustomerId());
+
         String alertMesaage = budgetStatusService.alertMessage(ticket.getCustomer().getCustomerId());
 
 
@@ -98,6 +101,7 @@ public class ExpenseController {
         model.addAttribute("budgetStatus", budgetStatusDTOS);
         model.addAttribute("alertMessage", alertMesaage);
         model.addAttribute("leadId", null);
+        model.addAttribute("totalResteGlobal", totalResteGlobal);
 
         return "expense/create-expense";
     }
