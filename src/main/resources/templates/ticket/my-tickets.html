@@ -107,6 +107,14 @@
                                                 </button>
                                             </form>
                                         </td>
+
+                                        <td>
+                                            <form th:if="${ticket.expense == null }" th:action="${home + 'employee/expense/ticket/' + ticket.ticketId}" method="post">
+                                                <button type="submit" class="btn btn-success">
+                                                    <i class="mdi mdi-currency-eur"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>

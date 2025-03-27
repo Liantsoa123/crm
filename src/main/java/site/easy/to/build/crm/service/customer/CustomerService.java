@@ -1,9 +1,12 @@
 package site.easy.to.build.crm.service.customer;
 
 import org.checkerframework.checker.units.qual.C;
+import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.entity.Customer;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.ListResourceBundle;
 
 public interface CustomerService {
 
@@ -23,4 +26,15 @@ public interface CustomerService {
 
     long countByUserId(int userId);
 
+    List<CustomerStatisticsDTO> getCustomerStatistics();
+
+    double getTotalExpensesTicketByCustomerId(int customerId);
+
+    double getTotalExpensesLeadByCustomerId(int customerId);
+
+    Double getTotalBudgetByCustomerId(int customerId);
+
+    double getTotalResteBudgetByCustomerId(int customerId);
+
+    List<Customer> saveAll(List<Customer> customers);
 }

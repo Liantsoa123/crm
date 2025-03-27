@@ -3,9 +3,12 @@ package site.easy.to.build.crm.service.customer;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import site.easy.to.build.crm.dto.CustomerStatisticsDTO;
 import site.easy.to.build.crm.repository.CustomerRepository;
 import site.easy.to.build.crm.entity.Customer;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -56,5 +59,50 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public long countByUserId(int userId) {
         return customerRepository.countByUserId(userId);
+    }
+
+    @Override
+    public List<CustomerStatisticsDTO> getCustomerStatistics() {
+        List<CustomerStatisticsDTO> customerStatisticsDTOS = new ArrayList<>();
+        List<Customer> customers = findAll();
+        for (Customer customer : customers) {
+            CustomerStatisticsDTO customerStatisticsDTO = new CustomerStatisticsDTO();
+            customerStatisticsDTO.setCustomerName(customer.getName());
+            customerStatisticsDTO.setCustomerId(customer.getCustomerId());
+            customerStatisticsDTO.setLeadCount(getTotalExpensesLeadByCustomerId(customer.getCustomerId()));
+            customerStatisticsDTO.setTicketCount(getTotalExpensesTicketByCustomerId(customer.getCustomerId()));
+            if (getTotalBudgetByCustomerId(customer.getCustomerId()) ==null){
+                customerStatisticsDTO.setTotalBudget(0);
+            }else {
+                customerStatisticsDTO.setTotalBudget(getTotalBudgetByCustomerId(customer.getCustomerId()));
+            }
+            customerStatisticsDTOS.add(customerStatisticsDTO);
+        }
+        return customerStatisticsDTOS;
+    }
+
+    @Override
+    public double getTotalExpensesTicketByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesTicketByCustomerId(customerId);
+    }
+
+    @Override
+    public double getTotalExpensesLeadByCustomerId(int customerId) {
+        return customerRepository.getTotalExpensesLeadByCustomerId(customerId);
+    }
+
+    @Override
+    public Double getTotalBudgetByCustomerId(int customerId) {
+        return customerRepository.getTotalBudgetByCustomerId(customerId);
+    }
+
+    @Override
+    public double getTotalResteBudgetByCustomerId(int customerId) {
+        return getTotalBudgetByCustomerId(customerId) - getTotalExpensesLeadByCustomerId(customerId) - getTotalExpensesTicketByCustomerId(customerId);
+    }
+
+    @Override
+    public List<Customer> saveAll(List<Customer> customers) {
+        return customerRepository.saveAll(customers);
     }
 }
